@@ -5,7 +5,7 @@ import csv
 
 driver = webdriver.Firefox()
 
-
+#сначала получаем всы ссылки на курсы из раздела
 def get_links(url):
     driver.get(url)
     course_links = []
@@ -16,7 +16,7 @@ def get_links(url):
         sleep(1)
         courses = driver.find_elements_by_xpath('//article')
         for z in courses:
-            if z.get_attribute("title") != 'Available for CourseHunters subscribers only':
+            if z.get_attribute("title") != 'Available for CourseHunters subscribers only':  #проверяем, что курс уже доступен для просмотра
                 course_links.append(z.find_element_by_xpath('.//a').get_attribute("href"))
         if len(driver.find_elements_by_xpath("//a[@rel='next']")) > 0:
             driver.find_element_by_xpath("//a[@rel='next']").click()
