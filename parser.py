@@ -29,6 +29,11 @@ def list_of_lessons(course_url):
     driver.find_element_by_css_selector('span.lessons-list__more').click()
     lessons = driver.find_elements_by_css_selector('li.lessons-list__li')
     course_name = driver.find_element_by_tag_name('h1').text[:-13]
+    if len(driver.find_elements_by_css_selector('div a.downloads')) > 0:
+        additional_info = driver.find_element_by_css_selector('div a.downloads').get_attribute("href")
+        with open('output.csv', 'a', newline='') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',')
+            filewriter.writerow([course_name,'материалы к курсу','', additional_info])
     for l in lessons:
         title = l.find_element_by_xpath(".//span[@itemprop='name']").text
         duration = l.find_element_by_xpath(".//em[@itemprop='duration']").text
@@ -37,6 +42,7 @@ def list_of_lessons(course_url):
         with open('output.csv', 'a', newline='') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',')
             filewriter.writerow(row)
+
     print("Added " + course_name)
 
 for l in links:
