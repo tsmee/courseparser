@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from collections import namedtuple
 from time import sleep
 import csv
 
 driver = webdriver.Firefox()
-single_lesson = namedtuple('single_lesson', 'title, duration, url')
 
 
 def get_links(url):
@@ -20,7 +18,6 @@ def get_links(url):
         for z in courses:
             if z.get_attribute("title") != 'Available for CourseHunters subscribers only':
                 course_links.append(z.find_element_by_xpath('.//a').get_attribute("href"))
-                print(len(course_links))
         if len(driver.find_elements_by_xpath("//a[@rel='next']")) > 0:
             driver.find_element_by_xpath("//a[@rel='next']").click()
     print(len(course_links))
@@ -35,7 +32,6 @@ def list_of_lessons(course_url):
     driver.find_element_by_css_selector('span.lessons-list__more').click()
     lessons = driver.find_elements_by_css_selector('li.lessons-list__li')
     course_name = driver.find_element_by_tag_name('h1').text[:-13]
-    all_lessons = [course_name]
     for l in lessons:
         title = l.find_element_by_xpath(".//span[@itemprop='name']").text
         duration = l.find_element_by_xpath(".//em[@itemprop='duration']").text
@@ -44,8 +40,7 @@ def list_of_lessons(course_url):
         with open('output.csv', 'a') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',')
             filewriter.writerow(row)
-    print("Added " + course_name + " Total amount of lessons - " + str(len(all_lessons)))
-    return all_lessons
+    print("Added " + course_name)
 
 for l in links:
     list_of_lessons(l)
