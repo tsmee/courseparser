@@ -13,14 +13,12 @@ def get_links(url):
     last_page = int(total_pages[-2].text)
 
     for n in range(last_page):
-        sleep(1)
         courses = driver.find_elements_by_xpath('//article')
         for z in courses:
             if z.get_attribute("title") != 'Available for CourseHunters subscribers only':  #проверяем, что курс уже доступен для просмотра
                 course_links.append(z.find_element_by_xpath('.//a').get_attribute("href"))
         if len(driver.find_elements_by_xpath("//a[@rel='next']")) > 0:
             driver.find_element_by_xpath("//a[@rel='next']").click()
-    print(len(course_links))
     return course_links
 
 links = get_links('https://coursehunters.net/testirovanie-quality-assurance-qa')
@@ -42,6 +40,6 @@ def list_of_lessons(course_url):
             filewriter.writerow(row)
     print("Added " + course_name)
 
-for l in links[2:7]:
+for l in links:
     list_of_lessons(l)
 
